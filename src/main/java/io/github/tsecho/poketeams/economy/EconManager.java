@@ -48,6 +48,14 @@ public class EconManager {
 
     /**
      *
+     * @return TransactionResult of leaving the queue
+     */
+    public TransactionResult leavingQueue() {
+        return account.deposit(currency, BigDecimal.valueOf(getSettings().battle.queueFee.price), CAUSE);
+    }
+
+    /**
+     *
      * @param amount to withdraw from an account
      * @return TransactionResult of the withdrawn money
      */

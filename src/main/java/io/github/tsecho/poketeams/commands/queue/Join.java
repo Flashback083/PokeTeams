@@ -1,5 +1,8 @@
 package io.github.tsecho.poketeams.commands.queue;
 
+import com.pixelmonmod.pixelmon.Pixelmon;
+import com.pixelmonmod.pixelmon.battles.rules.clauses.BattleClauseRegistry;
+import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import io.github.tsecho.poketeams.PokeTeams;
 import io.github.tsecho.poketeams.apis.PokeTeamsAPI;
 import io.github.tsecho.poketeams.economy.EconManager;
@@ -38,7 +41,13 @@ public class Join implements CommandExecutor{
 		if(!role.canJoinQueue())
 			return ErrorCheck.test(src, ErrorMessage.INSUFFICIENT_RANK);
 		if(QueueManager.getQueue().contains(src.getName()))
-			return ErrorCheck.test(src, QueueMessage.ALREADY_IN_QUEUE);
+			return ErrorCheck.test (src, QueueMessage.ALREADY_IN_QUEUE);
+
+		PlayerPartyStorage players = Pixelmon.storageManager.getParty(((Player) src).getUniqueId());
+
+		if (!BattleClauseRegistry.getClauseRegistry().getClause("OU_serveur").validateTeam(players.getTeam())) {
+			return ErrorCheck.test(src,"Tu ne peux pas rejoindre la queue avec cette \u00E9quipe Pok\u00E9mon !");
+		}
 
 		if(getSettings().battle.queueFee.isEnabled) {
 
